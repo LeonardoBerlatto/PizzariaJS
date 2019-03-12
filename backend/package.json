@@ -12,6 +12,7 @@
   "dependencies": {
     "config": "^3.0.1",
     "express": "^4.16.4",
+    "mysql2": "^1.6.5",
     "sequelize": "^4.43.0",
     "winston": "^3.2.1"
   },
