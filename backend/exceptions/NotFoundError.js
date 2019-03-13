@@ -3,8 +3,8 @@ const {
 } = require('../utils/statusCodes');
 
 class NotFoundError extends Error {
-	constructor() {
-		super('Not found');
+	constructor(element) {
+		super(`${element} not found`);
 		this.status = NOT_FOUND;
 	}
 }
