@@ -17,7 +17,8 @@ const User = sequelize.define('user', {
 	},
 	userType: {
 		type: Sequelize.ENUM('admin', 'owner', 'simple'),
-		allowNull: false
+		allowNull: false,
+		field: 'user_type'
 	},
 	password: {
 		type: Sequelize.STRING,
