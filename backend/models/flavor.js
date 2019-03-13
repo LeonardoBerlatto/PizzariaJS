@@ -7,6 +7,11 @@ const Flavor = sequelize.define('flavor', {
 		type: Sequelize.TEXT,
 		allowNull: false,
 	},
+	defaultPrice: {
+		type: Sequelize.FLOAT,
+		allowNull: false,
+		field: 'default_price'
+	},
 	type: {
 		type: Sequelize.ENUM('savory', 'sweet'),
 		allowNull: false
