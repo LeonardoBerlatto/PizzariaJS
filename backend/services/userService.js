@@ -32,21 +32,17 @@ async function createUser(data) {
 async function updateUser(id, dataToUpdate) {
 	const user = await User.findByPk(id);
 	if (!user) {
-		throw new NotFoundError();
+		throw new NotFoundError('User');
 	}
 
 	try {
-		await User.update({
-			name: dataToUpdate.name,
-			email: dataToUpdate.email,
-			userType: dataToUpdate.userType,
-			password: dataToUpdate.password
-		}, {
-			returning: true,
-			where: {
-				id
-			}
-		});
+		await User.update(
+			dataToUpdate, {
+				returning: true,
+				where: {
+					id
+				}
+			});
 		const updatedUser = await User.findByPk(id);
 		return updatedUser;
 	} catch (error) {

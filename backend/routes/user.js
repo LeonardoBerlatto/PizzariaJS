@@ -24,11 +24,11 @@ router.post('/', async (req, res) => {
 	}
 });
 
-router.put('/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
 	try {
 		const user = await UserService.updateUser(req.params.id, req.body);
+		res.status(OK);
 		res.send(user);
-		res.sendStatus(OK);
 	} catch (error) {	
 		res.status(error.status);
 		res.send(error.message);
