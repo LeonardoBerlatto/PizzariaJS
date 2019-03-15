@@ -6,12 +6,11 @@ router.get('/:id', async (req, res) => {
 	try {
 		const franchise = await FranchiseService.getFranchiseById(req.params.id);
 		res.send(franchise);
-	} catch (error) {
+	} catch (error) {		
 		res.status(error.status);
 		res.send(error.message);
 	}
 });
-
 
 router.post('/', async (req, res) => {
 	try {

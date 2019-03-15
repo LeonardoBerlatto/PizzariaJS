@@ -5,7 +5,12 @@ const FranchiseNameAlreadyExistsError = require('../exceptions/FranchiseNameAlre
 const User = require('../models/user');
 
 async function getFranchiseById(id) {
-	const franchise = await Franchise.findByPk(id);
+	const franchise = await Franchise.findByPk(id, {
+		include: [{
+			model: User,
+			attributes: ['id', 'name']
+		}]
+	});
 	if (!franchise) {
 		throw new NotFoundError('Franchise');
 	}
@@ -43,13 +48,12 @@ async function updateFranchise(id, dataToUpdate) {
 	try {
 		await Franchise.update(
 			dataToUpdate, {
-				returning: true,
 				where: {
 					id
 				}
 			});
-		const updatedUser = await Franchise.findByPk(id);
-		return updatedUser;
+		const updatedFranchise = await Franchise.findByPk(id);
+		return updatedFranchise;
 	} catch (error) {
 		throw new InvalidInput(error.message);
 	}

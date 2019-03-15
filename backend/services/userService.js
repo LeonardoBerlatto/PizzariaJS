@@ -2,9 +2,15 @@ const User = require('../models/user');
 const NotFoundError = require('../exceptions/NotFoundError');
 const EmailAlreadyInUseError = require('../exceptions/EmailAlreadyInUseError');
 const InvalidInput = require('../exceptions/InvalidInput');
+const Franchise = require('../routes/franchise');
 
 async function getUserById(id) {
-	const user = await User.findByPk(id);
+	const user = await User.findByPk(id, {
+		include: [{
+			model: Franchise,
+			attributes: ['id', 'name', 'shopsNumber']
+		}]
+	});
 	if (!user) {
 		throw new NotFoundError('User');
 	}
