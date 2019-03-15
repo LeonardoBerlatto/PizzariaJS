@@ -15,11 +15,11 @@ const Franchise = sequelize.define('franchise', {
 	},
 });
 
-Franchise.hasMany(Flavor, {foreignKey: 'franschiseId', sourceKey: 'id'});
-Flavor.belongsTo(Franchise, {foreignKey: 'franschiseId', targetKey: 'id'});
+Franchise.hasMany(Flavor, {foreignKey: 'franchiseId', sourceKey: 'id'});
+Flavor.belongsTo(Franchise, {foreignKey: 'franchiseId', targetKey: 'id'});
 
 
-Franchise.hasMany(Purchase, {foreignKey: 'franschiseId', sourceKey: 'id'});
-Purchase.belongsTo(Franchise, {foreignKey: 'franschiseId', targetKey: 'id'});
+Franchise.hasMany(Purchase, {foreignKey: 'franchiseId', sourceKey: 'id'});
+Purchase.belongsTo(Franchise, {foreignKey: 'franchiseId', targetKey: 'id'});
 
 module.exports = Franchise;
