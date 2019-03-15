@@ -8,7 +8,7 @@ const Flavor = sequelize.define('flavor', {
 		allowNull: false,
 	},
 	defaultPrice: {
-		type: Sequelize.FLOAT,
+		type: Sequelize.DOUBLE,
 		allowNull: false,
 		field: 'default_price'
 	},
