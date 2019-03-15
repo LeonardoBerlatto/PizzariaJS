@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../db/sequelize');
 const Flavor = require('./flavor');
+const Purchase = require('./purchase');
 
 const Franchise = sequelize.define('franchise', {
 	name: {
@@ -16,5 +17,9 @@ const Franchise = sequelize.define('franchise', {
 
 Franchise.hasMany(Flavor, {foreignKey: 'franschiseId', sourceKey: 'id'});
 Flavor.belongsTo(Franchise, {foreignKey: 'franschiseId', targetKey: 'id'});
+
+
+Franchise.hasMany(Purchase, {foreignKey: 'franschiseId', sourceKey: 'id'});
+Purchase.belongsTo(Franchise, {foreignKey: 'franschiseId', targetKey: 'id'});
 
 module.exports = Franchise;
