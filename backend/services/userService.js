@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const NotFoundError = require('../exceptions/NotFoundError');
 const EmailAlreadyInUseError = require('../exceptions/EmailAlreadyInUseError');
@@ -26,6 +27,9 @@ async function createUser(data) {
 	if (user) {
 		throw new EmailAlreadyInUseError();
 	}
+
+	const salt = await bcrypt.genSalt(10);
+	data.password = await bcrypt.hash(data.password, salt);
 
 	try {
 		const user = await User.create(data);

@@ -16,8 +16,8 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
 	try {
 		const user = await UserService.createUser(req.body);
+		res.status(CREATED);
 		res.send(user);
-		res.sendStatus(CREATED);
 	} catch (error) {	
 		res.status(error.status);
 		res.send(error.message);
