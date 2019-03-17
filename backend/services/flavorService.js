@@ -3,6 +3,7 @@ const Franchise = require('../models/franchise');
 const NotFoundError = require('../exceptions/NotFoundError');
 const InvalidInput = require('../exceptions/InvalidInput');
 const FlavorNameAlreadyInUseError = require('../exceptions/FlavorNameAlreadyInUseError');
+const Ingredient = require('../models/ingredient');
 
 async function getFlavorById(id) {
 	const flavor = await Flavor.findByPk(id, {
@@ -29,7 +30,11 @@ async function getFlavorsFromFranchise(franchiseId) {
 	const flavors = await Flavor.findAll({
 		where: {
 			franchiseId
-		}
+		},
+		include: [{
+			model: Ingredient,
+			attributes: ['id', 'name']
+		}]
 	});
 
 	return flavors;
