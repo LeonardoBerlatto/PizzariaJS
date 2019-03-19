@@ -1,9 +1,14 @@
 const bcrypt = require('bcrypt');
-const User = require('../models/user');
+const {
+	User,
+	validateUser
+} = require('../models/user');
 const NotFoundError = require('../exceptions/NotFoundError');
 const EmailAlreadyInUseError = require('../exceptions/EmailAlreadyInUseError');
-const InvalidInput = require('../exceptions/InvalidInput');
-const Franchise = require('../routes/franchise');
+const InvalidInputError = require('../exceptions/InvalidInputError');
+const {
+	Franchise
+} = require('../models/franchise');
 
 async function getUserById(id) {
 	const user = await User.findByPk(id, {
@@ -28,6 +33,12 @@ async function createUser(data) {
 		throw new EmailAlreadyInUseError();
 	}
 
+	const {
+		error
+	} = validateUser(data);
+	if (error)
+		throw new InvalidInputError(error.details[0].message);
+
 	const salt = await bcrypt.genSalt(10);
 	data.password = await bcrypt.hash(data.password, salt);
 
@@ -35,7 +46,7 @@ async function createUser(data) {
 		const user = await User.create(data);
 		return user;
 	} catch (error) {
-		throw new InvalidInput(error.message);
+		throw new InvalidInputError(error.message);
 	}
 }
 
@@ -56,7 +67,7 @@ async function updateUser(id, dataToUpdate) {
 		const updatedUser = await User.findByPk(id);
 		return updatedUser;
 	} catch (error) {
-		throw new InvalidInput(error.message);
+		throw new InvalidInputError(error.message);
 	}
 }
 

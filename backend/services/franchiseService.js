@@ -1,8 +1,8 @@
-const Franchise = require('../models/franchise');
+const { Franchise, validateFranchise } = require('../models/franchise');
 const NotFoundError = require('../exceptions/NotFoundError');
-const InvalidInput = require('../exceptions/InvalidInput');
+const InvalidInputError = require('../exceptions/InvalidInputError');
 const FranchiseNameAlreadyExistsError = require('../exceptions/FranchiseNameAlreadyExistsError');
-const User = require('../models/user');
+const { User } = require('../models/user');
 
 async function getFranchiseById(id) {
 	const franchise = await Franchise.findByPk(id, {
@@ -31,11 +31,15 @@ async function createFranchise(data) {
 		throw new NotFoundError('User');
 	}
 
+	const { error } = validateFranchise(data);
+	if (error)
+		throw new InvalidInputError(error.details[0].message);
+
 	try {
 		const franchise = await Franchise.create(data);
 		return franchise;
 	} catch (error) {
-		throw new InvalidInput(error.message);
+		throw new InvalidInputError(error.message);
 	}
 }
 
@@ -55,7 +59,7 @@ async function updateFranchise(id, dataToUpdate) {
 		const updatedFranchise = await Franchise.findByPk(id);
 		return updatedFranchise;
 	} catch (error) {
-		throw new InvalidInput(error.message);
+		throw new InvalidInputError(error.message);
 	}
 }
 

@@ -1,8 +1,13 @@
-const Ingredient = require('../models/ingredient');
+const {
+	Ingredient,
+	validateIngredient
+} = require('../models/ingredient');
 const NotFoundError = require('../exceptions/NotFoundError');
-const Flavor = require('../models/flavor');
+const {
+	Flavor
+} = require('../models/flavor');
 const IngredientBelongstoFlavorError = require('../exceptions/IngredientBelongstoFlavorError');
-const InvalidInput = require('../exceptions/InvalidInput');
+const InvalidInputError = require('../exceptions/InvalidInputError');
 
 async function getIngredientById(id) {
 	const ingredient = await Ingredient.findByPk(id);
@@ -14,28 +19,13 @@ async function getIngredientById(id) {
 	return ingredient;
 }
 
-async function getIngredientsFromFlavor(flavorId) {
-	const flavor = await Flavor.findByPk(flavorId);
-	if (!flavor) {
-		throw new NotFoundError('Flavor');
-	}
-
-	const ingredients = await Ingredient.findAll({
-		where: {
-			flavorId
-		}
-	});
-
-	return ingredients;
-}
-
 async function createIngredient(data) {
 	const flavor = await Flavor.findByPk(data.flavorId);
 	if (!flavor) {
 		throw new NotFoundError('Flavor');
 	}
 
-	const ingredient = await Ingredient.find({
+	const ingredient = await Ingredient.findOne({
 		where: {
 			name: data.name
 		}
@@ -45,11 +35,18 @@ async function createIngredient(data) {
 		throw new IngredientBelongstoFlavorError(data.name);
 	}
 
+	const {
+		error
+	} = validateIngredient(data);
+	if (error)
+		throw new InvalidInputError(error.details[0].message);
+
 	try {
 		const ingredient = await Ingredient.create(data);
+		flavor.addIngredients([ingredient]);
 		return ingredient;
 	} catch (error) {
-		throw new InvalidInput(error.message);
+		throw new InvalidInputError(error.message);
 	}
 }
 
@@ -69,8 +66,8 @@ async function updateIngredient(id, dataToUpdate) {
 		const updatedIngredient = await Ingredient.findByPk(id);
 		return updatedIngredient;
 	} catch (error) {
-		throw new InvalidInput(error.message);
-	}	
+		throw new InvalidInputError(error.message);
+	}
 }
 
 async function deleteIngredient(id) {
@@ -90,7 +87,6 @@ async function deleteIngredient(id) {
 }
 
 module.exports.getIngredientById = getIngredientById;
-module.exports.getIngredientsFromFlavor = getIngredientsFromFlavor;
 module.exports.createIngredient = createIngredient;
 module.exports.updateIngredient = updateIngredient;
 module.exports.deleteIngredient = deleteIngredient;

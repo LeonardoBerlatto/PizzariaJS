@@ -1,8 +1,8 @@
-const Purchase = require('../models/purchase');
-const User = require('../models/user');
-const Franchise = require('../models/franchise');
+const { Purchase } = require('../models/purchase');
+const { User } = require('../models/user');
+const { Franchise } = require('../models/franchise');
 const NotFoundError = require('../exceptions/NotFoundError');
-const InvalidInput = require('../exceptions/InvalidInput');
+const InvalidInputError = require('../exceptions/InvalidInputError');
 
 async function getPurchaseById(id) {
 	const purchase = await Purchase.findByPk(id, {
@@ -78,7 +78,7 @@ async function createPurchase(data) {
 		const purchase = await Purchase.create(data);
 		return purchase;
 	} catch (error) {
-		throw new InvalidInput(error.message);
+		throw new InvalidInputError(error.message);
 	}
 }
 
