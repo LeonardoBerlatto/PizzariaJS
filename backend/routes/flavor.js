@@ -22,6 +22,16 @@ router.get('/franchise/:id', async (req, res) => {
 	}
 });
 
+router.get('/ingredient/:id', async (req, res) => {
+	try {
+		const ingredients = await FlavorService.getIngredientsFromFlavor(req.params.id);
+		res.send(ingredients);
+	} catch (error) {		
+		res.status(error.status);
+		res.send(error.message);
+	}
+});
+
 router.post('/', async (req, res) => {
 	try {
 		const flavor = await FlavorService.createFlavor(req.body);

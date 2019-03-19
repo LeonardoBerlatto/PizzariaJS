@@ -16,16 +16,6 @@ router.get('/:id', async (req, res) => {
 	}
 });
 
-router.get('/flavor/:id', async (req, res) => {
-	try {
-		const ingredients = await IngredientService.getIngredientsFromFlavor(req.params.id);
-		res.send(ingredients);
-	} catch (error) {
-		res.status(error.status);
-		res.send(error.message);
-	}
-});
-
 router.post('/', async (req, res) => {
 	try {
 		const ingredient = await IngredientService.createIngredient(req.body);
