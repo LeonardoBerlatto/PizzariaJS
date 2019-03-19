@@ -1,2 +1,3 @@
 {
+	"jwtPrivateKey" : "myJwtPrivateKey"
 }
