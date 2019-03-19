@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
+const Joi = require('joi');
 const sequelize = require('../db/sequelize');
-const Ingredient = require('./ingredient');
+const { Ingredient } = require('./ingredient');
 
 const Flavor = sequelize.define('flavor', {
 	name: {
@@ -15,7 +16,7 @@ const Flavor = sequelize.define('flavor', {
 	type: {
 		type: Sequelize.ENUM('savory', 'sweet'),
 		allowNull: false
-	}
+	},
 });
 
 Flavor.belongsToMany(Ingredient, {
@@ -25,4 +26,15 @@ Ingredient.belongsToMany(Flavor, {
 	through: 'flavor_ingredient',
 });
 
-module.exports = Flavor;
+let validateFlavor = (flavor) => {
+	const schema = {
+		name: Joi.string().min(5).max(125).required(),
+		defaultPrice: Joi.number().min(1.90).max(50.00).precision(2).required(),
+		type: Joi.string().min(5).max(6).required(),
+		franchiseId: Joi.number().positive().required()
+	};
+	return Joi.validate(flavor, schema);
+};
+
+module.exports.Flavor = Flavor;
+module.exports.validateFlavor = validateFlavor;
