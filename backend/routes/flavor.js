@@ -1,8 +1,13 @@
 const router = require('express').Router();
 const FlavorService = require('../services/flavorService');
-const { CREATED, OK } = require('../utils/statusCodes');
+const {
+	CREATED,
+	OK
+} = require('../utils/statusCodes');
+const auth = require('../middleware/auth');
+const owner = require('../middleware/owner');
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', [auth], async (req, res) => {
 	try {
 		const flavor = await FlavorService.getFlavorById(req.params.id);
 		res.send(flavor);
@@ -12,7 +17,7 @@ router.get('/:id', async (req, res) => {
 	}
 });
 
-router.get('/franchise/:id', async (req, res) => {
+router.get('/franchise/:id', [auth], async (req, res) => {
 	try {
 		const flavors = await FlavorService.getFlavorsFromFranchise(req.params.id);
 		res.send(flavors);
@@ -22,39 +27,39 @@ router.get('/franchise/:id', async (req, res) => {
 	}
 });
 
-router.get('/ingredient/:id', async (req, res) => {
+router.get('/ingredient/:id', [auth], async (req, res) => {
 	try {
 		const ingredients = await FlavorService.getIngredientsFromFlavor(req.params.id);
 		res.send(ingredients);
-	} catch (error) {		
+	} catch (error) {
 		res.status(error.status);
 		res.send(error.message);
 	}
 });
 
-router.post('/', async (req, res) => {
+router.post('/', [auth, owner], async (req, res) => {
 	try {
 		const flavor = await FlavorService.createFlavor(req.body);
 		res.status(CREATED);
 		res.send(flavor);
-	} catch (error) {	
+	} catch (error) {
 		res.status(error.status);
 		res.send(error.message);
 	}
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', [auth, owner], async (req, res) => {
 	try {
 		const flavor = await FlavorService.updateFlavor(req.params.id, req.body);
 		res.status(OK);
 		res.send(flavor);
-	} catch (error) {	
+	} catch (error) {
 		res.status(error.status);
 		res.send(error.message);
 	}
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [auth, owner], async (req, res) => {
 	try {
 		const flavor = await FlavorService.deleteFlavor(req.params.id);
 		res.send(flavor);

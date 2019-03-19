@@ -1,8 +1,11 @@
 const router = require('express').Router();
 const PurchaseService = require('../services/purchaseService');
-const { CREATED } = require('../utils/statusCodes');
+const {
+	CREATED
+} = require('../utils/statusCodes');
+const auth = require('../middleware/auth');
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', [auth], async (req, res) => {
 	try {
 		const purchase = await PurchaseService.getPurchaseById(req.params.id);
 		res.send(purchase);
@@ -12,7 +15,7 @@ router.get('/:id', async (req, res) => {
 	}
 });
 
-router.get('/user/:id', async (req, res) => {
+router.get('/user/:id', [auth], async (req, res) => {
 	try {
 		const purchases = await PurchaseService.getAllPurchasesFromUser(req.params.id);
 		res.send(purchases);
@@ -22,9 +25,9 @@ router.get('/user/:id', async (req, res) => {
 	}
 });
 
-router.get('/franchise/:id', async (req, res) => {
+router.get('/franchise/:id', [auth], async (req, res) => {
 	try {
-		const purchases = await PurchaseService.getAllPurchasesFromUser(req.params.id);
+		const purchases = await PurchaseService.getAllPurchasesFromFranchise(req.params.id);
 		res.send(purchases);
 	} catch (error) {
 		res.status(error.status);
@@ -32,12 +35,12 @@ router.get('/franchise/:id', async (req, res) => {
 	}
 });
 
-router.post('/', async (req, res) => {
+router.post('/', [auth], async (req, res) => {
 	try {
 		const purchase = await PurchaseService.createPurchase(req.body);
 		res.status(CREATED);
 		res.send(purchase);
-	} catch (error) {		
+	} catch (error) {
 		res.status(error.status);
 		res.send(error.message);
 	}

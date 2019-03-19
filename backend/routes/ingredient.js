@@ -4,9 +4,10 @@ const {
 	CREATED,
 	OK
 } = require('../utils/statusCodes');
+const auth = require('../middleware/auth');
+const owner = require('../middleware/owner');
 
-
-router.get('/:id', async (req, res) => {
+router.get('/:id', [auth], async (req, res) => {
 	try {
 		const ingredient = await IngredientService.getIngredientById(req.params.id);
 		res.send(ingredient);
@@ -16,7 +17,7 @@ router.get('/:id', async (req, res) => {
 	}
 });
 
-router.post('/', async (req, res) => {
+router.post('/', [auth, owner], async (req, res) => {
 	try {
 		const ingredient = await IngredientService.createIngredient(req.body);
 		res.status(CREATED);
@@ -27,7 +28,7 @@ router.post('/', async (req, res) => {
 	}
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', [auth, owner], async (req, res) => {
 	try {
 		const ingredient = await IngredientService.updateIngredient(req.params.id, req.body);
 		res.status(OK);
@@ -38,7 +39,7 @@ router.patch('/:id', async (req, res) => {
 	}
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [auth, owner], async (req, res) => {
 	try {
 		const ingredient = await IngredientService.deleteIngredient(req.params.id);
 		res.send(ingredient);
