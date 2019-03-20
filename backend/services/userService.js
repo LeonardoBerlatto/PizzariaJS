@@ -1,14 +1,16 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const {
 	User,
 	validateUser
 } = require('../models/user');
-const NotFoundError = require('../exceptions/NotFoundError');
-const EmailAlreadyInUseError = require('../exceptions/EmailAlreadyInUseError');
-const InvalidInputError = require('../exceptions/InvalidInputError');
 const {
 	Franchise
 } = require('../models/franchise');
+const NotFoundError = require('../exceptions/NotFoundError');
+const EmailAlreadyInUseError = require('../exceptions/EmailAlreadyInUseError');
+const InvalidInputError = require('../exceptions/InvalidInputError');
 
 async function getUserById(id) {
 	const user = await User.findByPk(id, {
@@ -21,6 +23,13 @@ async function getUserById(id) {
 		throw new NotFoundError('User');
 	}
 	return user;
+}
+
+async function verifyUserToken(token) {
+	token = token.replace('Bearer ', '');
+	const payload = jwt.verify(token, config.get('jwtPrivateKey'));
+	
+	return getUserById(payload.id);
 }
 
 async function createUser(data) {
@@ -87,6 +96,7 @@ async function deleteUser(id) {
 }
 
 module.exports.getUserById = getUserById;
+module.exports.verifyUserToken = verifyUserToken;
 module.exports.createUser = createUser;
 module.exports.deleteUser = deleteUser;
 module.exports.updateUser = updateUser;
