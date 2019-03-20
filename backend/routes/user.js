@@ -11,6 +11,16 @@ const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 
 
+router.get('/me',[auth], async (req, res) => {
+	try {
+		const user = await UserService.verifyUserToken(req.headers.authorization);
+		res.send(user);
+	} catch (error) {
+		res.status(error.status || 400);
+		res.send(error.message);
+	}
+});
+
 router.get('/:id', async (req, res) => {
 	try {
 		const user = await UserService.getUserById(req.params.id);
