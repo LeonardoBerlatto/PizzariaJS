@@ -15,7 +15,9 @@ module.exports.login = async (userToLogin) => {
 		throw new InvalidInputError(error.details[0].message);
 
 	let user = await User.findOne({
-		email: userToLogin.email
+		where: {
+			email: userToLogin.email
+		}
 	});
 	if (!user)
 		throw new UnauthorizedError();
