@@ -2,26 +2,60 @@
 	<div class="login">
 		<div class="login-form">
 			<h1>PizzariaJS</h1>
-			<input placeholder="Email" type="email" v-model="email" required />
-			<input placeholder="Password" type="password" v-model="password" required />
-			<button class="btn-submit ripple" @click="submit">Login</button>
+			<input
+				name="email"
+				placeholder="Email"
+				type="email"
+				v-model="user.email"
+				autofocus
+				required
+			/>
+			<input
+				name="password"
+				placeholder="Password"
+				type="password"
+				v-model="user.password"
+				required
+			/>
+			<transition enter-active-class="animated slideInLeft" mode="out-in">
+				<div class="error" v-if="error">
+					<span> {{ errorMessage }} </span>
+				</div>
+			</transition>
+			<button class="btn-submit ripple" @click="submit(user)">
+				Login
+			</button>
 		</div>
 	</div>
 </template>
 
 <script>
+import { login } from '../services/auth.js';
+
 export default {
 	data() {
 		return {
 			user: {
 				email: "",
 				password: ""
-			}
+			},
+			errorMessage: "",
+			error: false
 		}
 	},
 	methods: {
 		submit(user) {
-			return user;
+			login(user)
+				.then(res => this.loginSuccessful(res.data))
+				.catch((error) => this.loginFailed(error.response));
+		},
+		loginSuccessful(res) {
+			localStorage.setItem('auth', res.token);
+			this.$router.push({ name: 'home' });
+		},
+		loginFailed(res) {
+			this.errorMessage=res.data;
+			this.error=true;
 		}
 	}
 }
@@ -79,6 +113,19 @@ export default {
 					max-width: 120%;
 					width: 120%;
 				}
+
+				&:-webkit-autofill,
+				&:-webkit-autofill:hover,
+				&:-webkit-autofill:focus,
+				&:-webkit-autofill:active {
+					box-shadow: 0 0 0 30px white inset ;
+				}
+			}
+
+			.error {
+				color: #f44336;
+				margin-bottom: 30px;
+				font-weight: bold;
 			}
 
 			.btn-submit {
@@ -105,7 +152,7 @@ export default {
 				&:active {
 					background-color: $secondary-green;
 					background-size: 100%;
-				@include transition(background 0s);
+					@include transition(background 0s);
 				}
 			}
 		}
