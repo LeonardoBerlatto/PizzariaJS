@@ -11,8 +11,8 @@ router.post('/', async (req, res) => {
 		res.send({
 			token: token
 		});
-	} catch (error) {
-		res.status(error.httpStatus);
+	} catch (error) {		
+		res.status(error.status);
 		res.send(error.message);
 	}
 });
