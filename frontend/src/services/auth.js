@@ -5,5 +5,5 @@ export function login(userToLogin) {
 }
 
 export function checkLogin() {
-	return !!localStorage.getItem('token');
+	return !!localStorage.getItem('auth');
 }
