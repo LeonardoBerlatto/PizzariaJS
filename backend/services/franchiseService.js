@@ -6,15 +6,35 @@ const { User } = require('../models/user');
 
 async function getFranchiseById(id) {
 	const franchise = await Franchise.findByPk(id, {
-		include: [{
-			model: User,
-			attributes: ['id', 'name']
-		}]
+		include: [
+			{
+				model: User,
+				attributes: ['id', 'name']
+			}
+		]
 	});
 	if (!franchise) {
 		throw new NotFoundError('Franchise');
 	}
 	return franchise;
+}
+
+async function getFranchisesFromUser(userId) {
+	const franchises = await Franchise.findAll({
+		where: {
+			userId
+		},
+		include: [
+			{
+				model: User,
+				attributes: ['id', 'name']
+			}
+		],
+		attributes: {
+			exclude: ['createdAt', 'updatedAt']
+		}
+	});
+	return franchises;
 }
 
 async function createFranchise(data) {
@@ -32,8 +52,7 @@ async function createFranchise(data) {
 	}
 
 	const { error } = validateFranchise(data);
-	if (error)
-		throw new InvalidInputError(error.details[0].message);
+	if (error) throw new InvalidInputError(error.details[0].message);
 
 	try {
 		const franchise = await Franchise.create(data);
@@ -50,12 +69,11 @@ async function updateFranchise(id, dataToUpdate) {
 	}
 
 	try {
-		await Franchise.update(
-			dataToUpdate, {
-				where: {
-					id
-				}
-			});
+		await Franchise.update(dataToUpdate, {
+			where: {
+				id
+			}
+		});
 		const updatedFranchise = await Franchise.findByPk(id);
 		return updatedFranchise;
 	} catch (error) {
@@ -79,6 +97,7 @@ async function deleteFranchise(id) {
 }
 
 module.exports.getFranchiseById = getFranchiseById;
+module.exports.getFranchisesFromUser = getFranchisesFromUser;
 module.exports.createFranchise = createFranchise;
 module.exports.updateFranchise = updateFranchise;
 module.exports.deleteFranchise = deleteFranchise;

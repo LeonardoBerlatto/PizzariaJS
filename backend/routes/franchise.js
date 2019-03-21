@@ -17,6 +17,16 @@ router.get('/:id', [auth], async (req, res) => {
 	}
 });
 
+router.get('/user/:id', [auth], async (req, res) => {
+	try {
+		const franchises = await FranchiseService.getFranchisesFromUser(req.params.id);
+		res.send(franchises);
+	} catch (error) {
+		res.status(error.status);
+		res.send(error.message);
+	}
+});
+
 router.post('/', [auth, admin], async (req, res) => {
 	try {
 		const franchise = await FranchiseService.createFranchise(req.body);
