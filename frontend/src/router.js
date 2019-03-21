@@ -4,7 +4,9 @@ import {
 } from './services/auth';
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import Login from './views/Login.vue';
 import Welcome from './views/Welcome.vue'
+import FlavorList from './views/FlavorList.vue'
 import FranchiseList from './views/FranchiseList.vue'
 import RegisterUser from './views/RegisterUser.vue'
 
@@ -16,17 +18,25 @@ export default new Router({
 	routes: [{
 			path: '/',
 			component: Home,
-			beforeEnter: (to, from, next) => {
-				next(checkLogin);
-			},
 			children: [{
-					path: '/',
+					path: '',
 					name: 'home',
-					component: Welcome
+					component: Welcome,
+					beforeEnter: (to, from, next) => {
+						if (!checkLogin()) {
+							next('/login');
+						} else {
+							next();
+						}
+					},
 				},
 				{
 					path: '/franchises',
 					component: FranchiseList
+				},
+				{
+					path: '/flavors',
+					component: FlavorList
 				},
 				{
 					path: '/register',
@@ -35,17 +45,8 @@ export default new Router({
 			]
 		},
 		{
-			path: '/about',
-			name: 'about',
-			// route level code-splitting
-			// this generates a separate chunk (about.[hash].js) for this route
-			// which is lazy-loaded when the route is visited.
-			component: () => import( /* webpackChunkName: "about" */ './views/About.vue')
-		},
-		{
 			path: '/login',
-			name: 'login',
-			component: () => import( /* webpackChunkName: "about" */ './views/Login.vue')
+			component: Login,
 		}
 	]
 })
