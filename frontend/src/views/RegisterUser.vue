@@ -1,36 +1,77 @@
 <template>
 	<div class="register">
 		<h1>Register new user</h1>
-		<input type="text" name="name" placeholder="Name" />
-		<input type="email" name="email" placeholder="Email" />
+		<input type="text" v-model="user.name" name="name" placeholder="Name" />
+		<input
+			type="email"
+			v-model="user.email"
+			name="email"
+			placeholder="Email"
+		/>
 		<b-form-group label="Individual radios">
 			<b-form-radio
 				v-for="type in userTypes"
 				:key="type"
 				:value="type"
-				v-model="user.selected"
+				v-model="user.userType"
 				name="some-radios"
 			>
 				{{ type }}
 			</b-form-radio>
 		</b-form-group>
-		<input type="password" name="password" placeholder="Password" />
-		<button class="btn-submit ripple" @click="submit(user)">
-			Login
+		<input
+			type="password"
+			v-model="user.password"
+			name="password"
+			placeholder="Password"
+		/>
+		<transition enter-active-class="animated slideInLeft" mode="out-in">
+			<div class="message" v-if="msg">
+				<span :class="error ? 'error' : 'success'">
+					{{ msg }}
+				</span>
+			</div>
+		</transition>
+
+		<button class="btn-submit ripple" @click="create(user)">
+			Register
 		</button>
 	</div>
 </template>
 
 <script>
+import { createUser } from '../services/user.js';
+
 export default {
 	data() {
 		return {
+			error: false,
+			msg: '',
 			user: {
-				selected: ""
+				name: "",
+				email: "",
+				userType: "",
+				password: ""
 			},
 			userTypes: ['Admin', 'Owner', 'Simple']
 		}
-	}
+	},
+	methods: {
+		create(user) {
+			createUser(user)
+				.then(res => this.created(res.data))
+				.catch(error => this.failed(error.response));
+			console.log();
+		},
+		created(user) {
+			this.error=false;
+			this.msg=`User ${user.name} was created!`;
+		},
+		failed(res) {
+			this.error=true;
+			this.msg=res.data;
+		}
+	},
 }
 </script>
 
@@ -78,12 +119,25 @@ export default {
 				max-width: 290px;
 				width: 25%;
 			}
+			&:-webkit-autofill,
+			&:-webkit-autofill:hover,
+			&:-webkit-autofill:focus,
+			&:-webkit-autofill:active {
+				box-shadow: 0 0 0 30px white inset;
+			}
 		}
-		&:-webkit-autofill,
-		&:-webkit-autofill:hover,
-		&:-webkit-autofill:focus,
-		&:-webkit-autofill:active {
-			box-shadow: 0 0 0 30px white inset;
+
+		.message {
+			margin-bottom: 30px;
+			font-weight: bold;
+
+			.error {
+				color: #f44336;
+			}
+
+			.success {
+				color: $secondary-green;
+			}
 		}
 
 		.btn-submit {

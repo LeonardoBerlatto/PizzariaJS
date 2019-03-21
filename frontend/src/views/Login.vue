@@ -49,9 +49,9 @@ export default {
 				.then(res => this.loginSuccessful(res.data))
 				.catch((error) => this.loginFailed(error.response));
 		},
-		loginSuccessful(res) {
+		loginSuccessful(res) {			
 			localStorage.setItem('auth', res.token);
-			this.$router.push({ name: 'home' });
+			this.$router.push({name: 'home'});
 		},
 		loginFailed(res) {
 			this.errorMessage=res.data;
@@ -118,7 +118,7 @@ export default {
 				&:-webkit-autofill:hover,
 				&:-webkit-autofill:focus,
 				&:-webkit-autofill:active {
-					box-shadow: 0 0 0 30px white inset ;
+					box-shadow: 0 0 0 30px white inset;
 				}
 			}
 

@@ -6,13 +6,15 @@
 					<i class="material-icons icon">
 						local_pizza
 					</i>
-					<h1>PizzariaJS</h1>
+					<router-link :to="{ name: 'home' }" tag="h1"
+						>PizzariaJS</router-link
+					>
 
 					<router-link
 						to="/franchises"
 						v-if="user.userType === 'admin'"
 						tag="span"
-						>My Franchises</router-link
+						>Franchises</router-link
 					>
 					<router-link
 						to="/register"
@@ -30,11 +32,18 @@
 						to="/flavors"
 						v-if="user.userType === 'owner'"
 						tag="span"
-						>My Flavors</router-link
+						>Flavors</router-link
+					>
+					<router-link
+						to="/flavors"
+						v-if="user.userType === 'owner'"
+						tag="span"
+						>Other products</router-link
 					>
 				</div>
 				<div class="user-info">
-					<i class="material-icons icon">
+					<span class="username">{{ username }}</span>
+					<i @click="logout" class="material-icons icon">
 						account_circle
 					</i>
 				</div>
@@ -52,13 +61,23 @@ import { getMe as getCurrentUser } from '../services/user.js';
 import Loader from '../components/Loader';
 
 export default {
-	name: 'home',
 	components: {
 		Loader
 	},
 	data() {
 		return {
 			user: null
+		}
+	},
+	computed: {
+		username() {
+			return this.$store.state.user.name;
+		}
+	},
+	methods: {
+		logout() {
+			localStorage.removeItem('auth');
+			this.$router.push('/login');
 		}
 	},
 	created() {
@@ -100,6 +119,10 @@ export default {
 					display: flex;
 					align-items: center;
 
+					h1 {
+						cursor: pointer;
+					}
+
 					span {
 						cursor: pointer;
 						margin-left: 30px;
@@ -108,7 +131,14 @@ export default {
 				}
 
 				.user-info {
+					display: flex;
+					align-items: center;
 					cursor: pointer;
+					justify-content: space-evenly;
+
+					.username {
+						margin-right: 10px;
+					}
 				}
 
 				.icon {

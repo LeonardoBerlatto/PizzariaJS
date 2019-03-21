@@ -5,7 +5,7 @@
 				@row-clicked="editFranchise"
 				hover
 				:items="franchises"
-				:fields="['name', 'shopsNumber']"
+				:fields="['name', 'shopsNumber', { 'user.name': 'User' }]"
 			/>
 		</div>
 	</div>
@@ -13,7 +13,6 @@
 
 <script>
 import { getFranchisesFromUser } from '../services/franchises.js';
-
 
 export default {
 	data() {
@@ -40,8 +39,16 @@ export default {
 		width: 100%;
 		height: 100%;
 
-		tr {
-			cursor: pointer;
+		thead {
+			tr {
+				user-select: none;
+			}
+		}
+
+		tbody {
+			tr {
+				cursor: pointer;
+			}
 		}
 	}
 </style>
