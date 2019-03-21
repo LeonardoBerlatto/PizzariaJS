@@ -17,7 +17,10 @@ async function getUserById(id) {
 		include: [{
 			model: Franchise,
 			attributes: ['id', 'name', 'shopsNumber']
-		}]
+		}],
+		attributes: {
+			exclude: ['createdAt','updatedAt', 'password']
+		}
 	});
 	if (!user) {
 		throw new NotFoundError('User');
