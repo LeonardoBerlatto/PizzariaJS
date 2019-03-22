@@ -3,6 +3,7 @@ const UserRouter = require('./routes/user');
 const FranchiseRouter = require('./routes/franchise');
 const PurchaseRouter = require('./routes/purchase');
 const FlavorRouter = require('./routes/flavor');
+const ProductRouter = require('./routes/product');
 const IngredientRouter = require('./routes/ingredient');
 const AuthRouter = require('./routes/auth');
 
@@ -19,8 +20,10 @@ app.use('/api/users', UserRouter);
 app.use('/api/franchises', FranchiseRouter);
 app.use('/api/purchases', PurchaseRouter);
 app.use('/api/flavors', FlavorRouter);
+app.use('/api/products', ProductRouter);
 app.use('/api/ingredients', IngredientRouter);
 app.use('/api/auth', AuthRouter);
+
 
 
 module.exports = app;
