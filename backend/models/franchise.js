@@ -2,9 +2,14 @@ const Sequelize = require('sequelize');
 const Joi = require('joi');
 const sequelize = require('../db/sequelize');
 const {
+	Product
+} = require('./product');
+const {
 	Flavor
 } = require('./flavor');
-const { Purchase } = require('./purchase');
+const {
+	Purchase
+} = require('./purchase');
 
 const Franchise = sequelize.define('franchise', {
 	name: {
@@ -33,6 +38,16 @@ Franchise.hasMany(Purchase, {
 	sourceKey: 'id'
 });
 Purchase.belongsTo(Franchise, {
+	foreignKey: 'franchiseId',
+	targetKey: 'id'
+});
+
+Franchise.hasMany(Product, {
+	foreignKey: 'franchiseId',
+	sourceKey: 'id'
+});
+
+Product.belongsTo(Franchise, {
 	foreignKey: 'franchiseId',
 	targetKey: 'id'
 });
