@@ -21,6 +21,16 @@ router.get('/me',[auth], async (req, res) => {
 	}
 });
 
+router.get('/', async (req, res) => {
+	try {
+		const users = await UserService.getAllUsers();
+		res.send(users);
+	} catch (error) {
+		res.status(error.status);
+		res.send(error.message);
+	}
+});
+
 router.get('/:id', async (req, res) => {
 	try {
 		const user = await UserService.getUserById(req.params.id);

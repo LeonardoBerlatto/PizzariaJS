@@ -17,6 +17,12 @@
 						>Franchises</router-link
 					>
 					<router-link
+						to="/users"
+						v-if="user.userType === 'admin'"
+						tag="span"
+						>Users</router-link
+					>
+					<router-link
 						to="/register"
 						v-if="user.userType === 'admin'"
 						tag="span"
@@ -42,7 +48,9 @@
 					>
 				</div>
 				<div class="user-info">
-					<span class="username">{{ this.$store.state.user.name }}</span>
+					<span class="username">{{
+						this.$store.state.user.name
+					}}</span>
 					<i @click="logout" class="material-icons icon">
 						account_circle
 					</i>
@@ -72,25 +80,25 @@ export default {
 	methods: {
 		logout() {
 			localStorage.removeItem('auth');
-			this.user = null;
+			this.user=null;
 			this.$store.commit('reset');
 			this.$router.push('/login');
 		}
 	},
 	created() {
 		if (this.user) {
-			this.user =null;
+			this.user=null;
 		}
 		getCurrentUser()
 			.then(res => {
 				this.$store.state.user=res.data;
 				this.user=res.data;
 			})
-			.catch(error => console.log(error.response))	
+			.catch(error => console.log(error.response))
 	},
 	destroyed() {
 		console.log(this.user);
-		
+
 	}
 }
 </script>

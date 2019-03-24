@@ -1,74 +1,41 @@
 <template>
-	<div class="franchise-list">
+	<div class="user-list">
 		<div class="table">
 			<b-table
-				@row-clicked="editFranchise"
+				@row-clicked="editUser"
 				hover
 				bordered
-				:items="franchises"
-				:fields="['name', 'shopsNumber', { 'user.name': 'User' }]"
+				:items="users"
+				:fields="['name', 'email', 'userType']"
 			/>
 		</div>
 
-		<div class="add-franchise">
-			<input
-				type="text"
-				v-model="franchise.name"
-				name="franchise name"
-				placeholder="Name"
-			/>
-			<input
-				type="number"
-				v-model="franchise.shopsNumber"
-				name="franchise shopsNumber"
-				placeholder="Shops Number"
-			/>
-			<input
-				type="email"
-				v-model="franchise.userEmail"
-				name="franchise userEmail"
-				placeholder="User Email"
-			/>
-			<b-button
-				@click="addFranchise(franchise)"
-				class="btn-add"
-				variant="success"
-				size="lg"
-				show
-				>+</b-button
-			>
-		</div>
 		<div class="divider"></div>
 	</div>
 </template>
 
 <script>
-import { getFranchisesFromUser, createFranchise } from '../services/franchises.js';
+import { getAll } from '../services/user.js';
 
 export default {
 	data() {
 		return {
-			franchises: [],
-			franchise: {
+			users: [],
+			user: {
 				name: "",
-				shopsNumber: null,
-				userEmail: ""
+				email: null,
+				userType: ""
 			}
 		}
 	},
 	methods: {
-		editFranchise(item) {
-			this.$router.push(`/franchises/${item.id}`);
-		},
-		addFranchise(franchise){
-			createFranchise(franchise)
-				.then(res=> console.log(res.data))
-				.catch(error => console.log(error.response));
+		editUser(item) {
+			this.$router.push(`/users/${item.id}`);
 		}
 	},
 	created() {
-		getFranchisesFromUser(this.$store.state.user.id)
-			.then(res => this.franchises=res.data);
+		getAll(this.$store.state.user.id)
+			.then(res => this.users=res.data);
 	}
 }
 </script>
@@ -83,7 +50,7 @@ export default {
 		transition: $property;
 	}
 
-	.franchise-list {
+	.user-list {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -105,7 +72,7 @@ export default {
 				}
 			}
 		}
-		.add-franchise {
+		.add-user {
 			display: flex;
 			margin-bottom: 15px;
 			width: 60%;

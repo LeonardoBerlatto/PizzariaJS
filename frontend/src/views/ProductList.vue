@@ -128,11 +128,6 @@ export default {
 				}
 			}
 
-			.btn-add {
-				margin-bottom: 5px;
-				border-radius: 50%;
-			}
-
 			.add-product {
 				display: flex;
 				margin-bottom: 15px;

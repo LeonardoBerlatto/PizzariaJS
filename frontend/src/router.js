@@ -11,7 +11,10 @@ import ProductList from './views/ProductList.vue'
 import UpdateProduct from './views/UpdateProduct.vue'
 import UpdateFlavor from './views/UpdateFlavor.vue'
 import FranchiseList from './views/FranchiseList.vue'
+import ManageUsers from './views/ManageUsers.vue'
 import RegisterUser from './views/RegisterUser.vue'
+import UpdateUser from './views/UpdateUser.vue'
+import UpdateFranchise from './views/UpdateFranchise';
 
 Vue.use(Router)
 
@@ -38,6 +41,10 @@ export default new Router({
 					component: FranchiseList
 				},
 				{
+					path: '/franchises/:id',
+					component: UpdateFranchise
+				},
+				{
 					path: '/flavors',
 					component: FlavorList
 				},
@@ -52,6 +59,14 @@ export default new Router({
 				{
 					path: '/products/:id',
 					component: UpdateProduct,
+				},
+				{
+					path: '/users',
+					component: ManageUsers
+				},
+				{
+					path: '/users/:id',
+					component: UpdateUser
 				},
 				{
 					path: '/register',

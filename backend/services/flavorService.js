@@ -32,17 +32,8 @@ async function getFlavorById(id) {
 	return flavor;
 }
 
-async function getFlavorsFromFranchise(franchiseId) {
-	const franchise = Franchise.findByPk(franchiseId);
-
-	if (!franchise) {
-		throw new NotFoundError('Franchise');
-	}
-
+async function getAllFlavors() {
 	const flavors = await Flavor.findAll({
-		where: {
-			franchiseId
-		},
 		include: [{
 			model: Ingredient,
 			attributes: ['id', 'name']
@@ -130,7 +121,7 @@ async function deleteFlavor(id) {
 }
 
 module.exports.getFlavorById = getFlavorById;
-module.exports.getFlavorsFromFranchise = getFlavorsFromFranchise;
+module.exports.getAllFlavors = getAllFlavors;
 module.exports.getIngredientsFromFlavor = getIngredientsFromFlavor;
 module.exports.createFlavor = createFlavor;
 module.exports.updateFlavor = updateFlavor;

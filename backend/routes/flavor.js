@@ -19,7 +19,7 @@ router.get('/:id', [auth], async (req, res) => {
 
 router.get('/franchise/:id', [auth], async (req, res) => {
 	try {
-		const flavors = await FlavorService.getFlavorsFromFranchise(req.params.id);
+		const flavors = await FlavorService.getAllFlavors();
 		res.send(flavors);
 	} catch (error) {
 		res.status(error.status);

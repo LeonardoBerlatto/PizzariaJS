@@ -12,6 +12,20 @@ const NotFoundError = require('../exceptions/NotFoundError');
 const EmailAlreadyInUseError = require('../exceptions/EmailAlreadyInUseError');
 const InvalidInputError = require('../exceptions/InvalidInputError');
 
+async function getAllUsers() {
+	const users = await User.findAll({
+		include: [{
+			model: Franchise,
+			attributes: ['id', 'name', 'shopsNumber']
+		}],
+		attributes: {
+			exclude: ['createdAt','updatedAt', 'password']
+		}
+	});
+
+	return users;
+}
+
 async function getUserById(id) {
 	const user = await User.findByPk(id, {
 		include: [{
@@ -98,6 +112,7 @@ async function deleteUser(id) {
 	return user;
 }
 
+module.exports.getAllUsers = getAllUsers;
 module.exports.getUserById = getUserById;
 module.exports.verifyUserToken = verifyUserToken;
 module.exports.createUser = createUser;

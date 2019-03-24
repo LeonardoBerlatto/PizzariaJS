@@ -9,6 +9,15 @@ const {
 	User
 } = require('../models/user');
 
+async function getAllFranchises() {
+	const franchises = await Franchise.findAll({
+		include: [{
+			all: true
+		}],
+	});
+	return franchises;
+}
+
 async function getFranchiseById(id) {
 	const franchise = await Franchise.findByPk(id, {
 		include: [{
@@ -46,7 +55,11 @@ async function createFranchise(data) {
 	if (franchise) {
 		throw new FranchiseNameAlreadyExistsError();
 	}
-	const user = User.findByPk(data.userId);
+	const user = await User.findOne({
+		where: {
+			email: data.userEmail
+		}
+	});
 	if (!user) {
 		throw new NotFoundError('User');
 	}
@@ -55,6 +68,9 @@ async function createFranchise(data) {
 		error
 	} = validateFranchise(data);
 	if (error) throw new InvalidInputError(error.details[0].message);
+
+	delete data.userEmail;
+	data.userId = user.id;
 
 	try {
 		const franchise = await Franchise.create(data);
@@ -98,6 +114,7 @@ async function deleteFranchise(id) {
 	return franchise;
 }
 
+module.exports.getAllFranchises = getAllFranchises;
 module.exports.getFranchiseById = getFranchiseById;
 module.exports.getFranchisesFromUser = getFranchisesFromUser;
 module.exports.createFranchise = createFranchise;

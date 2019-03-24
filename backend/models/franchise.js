@@ -56,7 +56,7 @@ let validateFranchise = (franchise) => {
 	const schema = {
 		name: Joi.string().min(5).max(80).required(),
 		shopsNumber: Joi.number().positive().required(),
-		userId: Joi.number().positive().required()
+		userEmail: Joi.string().email().required()
 	};
 	return Joi.validate(franchise, schema);
 };
