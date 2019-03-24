@@ -22,6 +22,8 @@ router.get('/user/:id', [auth], async (req, res) => {
 		const franchises = await FranchiseService.getFranchisesFromUser(req.params.id);
 		res.send(franchises);
 	} catch (error) {
+		console.log(error);
+		
 		res.status(error.status);
 		res.send(error.message);
 	}
