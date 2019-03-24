@@ -3,12 +3,23 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+function initialState() {
+  return {
+    user: null
+  }
+}
+
 export default new Vuex.Store({
   state: {
-    user: null
+    user: initialState
   },
   mutations: {
-
+    reset(state) {
+      const s = initialState()
+      Object.keys(s).forEach(key => {
+        state[key] = s[key]
+      })
+    }
   },
   actions: {
 

@@ -49,13 +49,18 @@ export default {
 				.then(res => this.loginSuccessful(res.data))
 				.catch((error) => this.loginFailed(error.response));
 		},
-		loginSuccessful(res) {			
+		loginSuccessful(res) {
 			localStorage.setItem('auth', res.token);
-			this.$router.push({name: 'home'});
+			this.$router.push({ name: 'home' });
 		},
 		loginFailed(res) {
 			this.errorMessage=res.data;
 			this.error=true;
+		}
+	},
+	created() {
+		if (this.$store.state.user) {
+			this.$store.state.user=null;
 		}
 	}
 }

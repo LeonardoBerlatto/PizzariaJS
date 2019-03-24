@@ -1,17 +1,20 @@
-const { Franchise, validateFranchise } = require('../models/franchise');
+const {
+	Franchise,
+	validateFranchise
+} = require('../models/franchise');
 const NotFoundError = require('../exceptions/NotFoundError');
 const InvalidInputError = require('../exceptions/InvalidInputError');
 const FranchiseNameAlreadyExistsError = require('../exceptions/FranchiseNameAlreadyExistsError');
-const { User } = require('../models/user');
+const {
+	User
+} = require('../models/user');
 
 async function getFranchiseById(id) {
 	const franchise = await Franchise.findByPk(id, {
-		include: [
-			{
-				model: User,
-				attributes: ['id', 'name']
-			}
-		]
+		include: [{
+			model: User,
+			attributes: ['id', 'name']
+		}]
 	});
 	if (!franchise) {
 		throw new NotFoundError('Franchise');
@@ -21,17 +24,14 @@ async function getFranchiseById(id) {
 
 async function getFranchisesFromUser(userId) {
 	const franchises = await Franchise.findAll({
+		include: [{
+			all: true
+		}],
+		attributes: {
+			exclude: ['createdAt', 'updatedAt', ]
+		},
 		where: {
 			userId
-		},
-		include: [
-			{
-				model: User,
-				attributes: ['id', 'name']
-			}
-		],
-		attributes: {
-			exclude: ['createdAt', 'updatedAt']
 		}
 	});
 	return franchises;
@@ -51,7 +51,9 @@ async function createFranchise(data) {
 		throw new NotFoundError('User');
 	}
 
-	const { error } = validateFranchise(data);
+	const {
+		error
+	} = validateFranchise(data);
 	if (error) throw new InvalidInputError(error.details[0].message);
 
 	try {

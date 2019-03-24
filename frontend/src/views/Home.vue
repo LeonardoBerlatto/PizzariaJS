@@ -35,14 +35,14 @@
 						>Flavors</router-link
 					>
 					<router-link
-						to="/flavors"
+						to="/products"
 						v-if="user.userType === 'owner'"
 						tag="span"
 						>Other products</router-link
 					>
 				</div>
 				<div class="user-info">
-					<span class="username">{{ username }}</span>
+					<span class="username">{{ this.$store.state.user.name }}</span>
 					<i @click="logout" class="material-icons icon">
 						account_circle
 					</i>
@@ -69,23 +69,28 @@ export default {
 			user: null
 		}
 	},
-	computed: {
-		username() {
-			return this.$store.state.user.name;
-		}
-	},
 	methods: {
 		logout() {
 			localStorage.removeItem('auth');
+			this.user = null;
+			this.$store.commit('reset');
 			this.$router.push('/login');
 		}
 	},
 	created() {
+		if (this.user) {
+			this.user =null;
+		}
 		getCurrentUser()
 			.then(res => {
-				this.user=res.data;
 				this.$store.state.user=res.data;
-			});
+				this.user=res.data;
+			})
+			.catch(error => console.log(error.response))	
+	},
+	destroyed() {
+		console.log(this.user);
+		
 	}
 }
 </script>

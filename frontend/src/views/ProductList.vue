@@ -1,5 +1,5 @@
 <template>
-	<div class="flavor-list">
+	<div class="product-list">
 		<div
 			v-for="franchise in franchises"
 			:key="franchise.id"
@@ -7,34 +7,34 @@
 		>
 			<h1>{{ franchise.name }}</h1>
 			<b-table
-				@row-clicked="editFlavor"
+				@row-clicked="editProduct"
 				hover
-				:items="franchise.flavors"
+				:items="franchise.products"
 				:fields="['name', 'type', 'defaultPrice']"
 				bordered
 			/>
 
-			<div class="add-flavor">
+			<div class="add-product">
 				<input
 					type="text"
-					v-model="flavor.name"
-					name="flavor name"
+					v-model="product.name"
+					name="product name"
 					placeholder="Name"
 				/>
 				<input
 					type="text"
-					v-model="flavor.type"
-					name="flavor name"
+					v-model="product.type"
+					name="product type"
 					placeholder="Type"
 				/>
 				<input
 					type="text"
-					v-model="flavor.defaultPrice"
-					name="flavor price"
+					v-model="product.defaultPrice"
+					name="product price"
 					placeholder="Default Price"
 				/>
 				<b-button
-					@click="addFlavor(flavor, franchise.id)"
+					@click="addProduct(product, franchise.id)"
 					class="btn-add"
 					variant="success"
 					size="lg"
@@ -50,13 +50,13 @@
 
 <script>
 import { getFranchisesFromUser } from '../services/franchises.js';
-import { createFlavor } from '../services/flavors.js';
+import { createProduct } from '../services/products.js';
 
 export default {
 	data() {
 		return {
 			franchises: [],
-			flavor: {
+			product: {
 				name: "",
 				type: "",
 				defaultPrice: null
@@ -66,15 +66,15 @@ export default {
 		}
 	},
 	methods: {
-		editFlavor(item) {
-			this.$router.push(`/flavors/${item.id}`);
+		editProduct(item) {
+			this.$router.push(`/products/${item.id}`);
 		},
-		addFlavor(flavor, franchiseId) {
-			createFlavor(flavor, franchiseId)
+		addProduct(product, franchiseId) {
+			createProduct(product, franchiseId)
 				.then(res => {
 					this.franchises.filter(frachise => {
-						return frachise.id===res.data.franchiseId;
-					})[0].flavors.push(res.data)
+						return frachise.id === res.data.franchiseId; 
+					})[0].products.push(res.data)
 				})
 				.catch(error => console.log(error.response));
 		}
@@ -97,7 +97,7 @@ export default {
 		transition: $property;
 	}
 
-	.flavor-list {
+	.product-list {
 		background-color: #fff;
 		margin-top: 3.6rem;
 		width: 100%;
@@ -128,7 +128,12 @@ export default {
 				}
 			}
 
-			.add-flavor {
+			.btn-add {
+				margin-bottom: 5px;
+				border-radius: 50%;
+			}
+
+			.add-product {
 				display: flex;
 				margin-bottom: 15px;
 
